@@ -8,6 +8,7 @@ import { CardTarea } from "@/components/CardTarea";
 import { Modal } from "@/components/Modal";
 import { FormAgregarTarea } from "@/components/FormAgregarTarea";
 import { FormEditarTarea } from "@/components/FormEditarTarea";
+import { stringify } from "querystring";
 
 export default function Home() {
   const [tareas, setTareas] = useState<ITarea[]>([]);
@@ -17,13 +18,33 @@ export default function Home() {
   const [openModalEdit, setOpenModalEdit] = useState<boolean>(false);
   const [tareaEditar, setTareaEditar] = useState<ITarea>();
 
+  useEffect(() => {
+    const items: string | null = window.localStorage.getItem("Items")
+
+    if (items) {
+      let parsedItems: ITarea[] = JSON.parse(items);
+      setTareas(parsedItems);
+    } else {
+      setTareas([]);
+    }
+  }, [])
+
+  const useLocalStorage = (newTareas: ITarea[]): void => {
+    if(newTareas){
+      setTareas(newTareas);
+      let parsedItems = JSON.stringify(newTareas);
+      window.localStorage.setItem("Items", parsedItems)
+    }
+    return;
+  }
+
   const handleCambiarCompletado = (id: number, event: MouseEvent<HTMLSpanElement, globalThis.MouseEvent>): void => {
     event.preventDefault();
     const newTareas = tareas.map(tarea => {
       if (tarea.id === id) return { ...tarea, completada: !tarea.completada };
       return tarea;
     })
-    setTareas(newTareas)
+    useLocalStorage(newTareas)
   }
 
   const handleBuscarTarea = () => {
@@ -34,11 +55,11 @@ export default function Home() {
   const handleEliminarTarea = (id: number, event: MouseEvent<HTMLSpanElement, globalThis.MouseEvent>): void => {
     event.preventDefault();
     const newTareas = tareas.filter(tarea => tarea.id !== id);
-    setTareas(newTareas);
+    useLocalStorage(newTareas);
   }
 
   const handleAgregarTarea = (newTarea: ITarea): void => {
-    setTareas([...tareas, newTarea]);
+    useLocalStorage([...tareas, newTarea]);
   }
 
   const handleEditarTarea = (editTarea: ITarea): void => {
@@ -49,7 +70,7 @@ export default function Home() {
         }
         return tarea;
       });
-      setTareas(newTareas);
+      useLocalStorage(newTareas);
     }
     return;
   }
@@ -57,10 +78,6 @@ export default function Home() {
   useEffect(() => {
     handleBuscarTarea();
   }, [busqueda, tareas]);
-
-  useEffect(() => {
-    console.log(tareaEditar);
-  }, [tareaEditar])
 
   return (
     <div className="grid place-items-center">
@@ -93,7 +110,7 @@ export default function Home() {
         setOpenModal={setOpenModal}
       />
       <ContenedorCards>
-        {(tareasFilter.length > 0) ?
+        {(tareasFilter.length > 0) &&
           tareasFilter.map(tarea => (
             <CardTarea
               key={tarea.id}
@@ -104,7 +121,8 @@ export default function Home() {
               setTareaEditar={setTareaEditar}
             />
           ))
-          :
+        }
+        {(tareas.length <= 0) &&
           <h1
             className="m-10 font-bold text-3xl text-red-500 text-center"
           >
