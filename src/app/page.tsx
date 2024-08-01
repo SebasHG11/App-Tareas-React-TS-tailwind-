@@ -7,37 +7,43 @@ import { ContenedorCards } from "@/components/ContenedorCards";
 import { CardTarea } from "@/components/CardTarea";
 
 export default function Home() {
-  const initialValue: ITarea[] =[
-    {id: 1, titulo: 'Usar TS', completada: true},
-    {id: 2, titulo: 'Usar JS', completada: false},
-    {id: 3, titulo: 'Usar React', completada: true}
+  const initialValue: ITarea[] = [
+    { id: 1, titulo: 'Usar TS', completada: true },
+    { id: 2, titulo: 'Usar JS', completada: false },
+    { id: 3, titulo: 'Usar React', completada: true }
   ];
 
   const [tareas, setTareas] = useState<ITarea[]>(initialValue);
   const [tareasFilter, setTareasFilter] = useState<ITarea[]>(tareas);
   const [busqueda, setBusqueda] = useState<string>('');
 
-  const handleCambiarCompletado = (id: number, event: MouseEvent<HTMLSpanElement, globalThis.MouseEvent>): void =>{
+  const handleCambiarCompletado = (id: number, event: MouseEvent<HTMLSpanElement, globalThis.MouseEvent>): void => {
     event.preventDefault();
-    const newTareas = tareas.map(tarea =>{
-      if(tarea.id === id) return {...tarea, completada: !tarea.completada};
+    const newTareas = tareas.map(tarea => {
+      if (tarea.id === id) return { ...tarea, completada: !tarea.completada };
       return tarea;
     })
     setTareas(newTareas)
   }
 
-  const handleBuscarTarea = () =>{
+  const handleBuscarTarea = () => {
     const tareasBuscadas = tareas.filter(tarea => tarea.titulo.toLowerCase().includes(busqueda.toLowerCase()));
     setTareasFilter(tareasBuscadas);
   }
 
-  useEffect(()=>{
+  const handleEliminarTarea = (id: number, event: MouseEvent<HTMLSpanElement, globalThis.MouseEvent>): void => {
+    event.preventDefault();
+    const newTareas = tareas.filter(tarea => tarea.id !== id);
+    setTareas(newTareas);
+  }
+
+  useEffect(() => {
     handleBuscarTarea();
-  },[busqueda, tareas]);
+  }, [busqueda, tareas]);
 
   return (
     <div className="grid place-items-center">
-      <HeaderTareas 
+      <HeaderTareas
         tareas={tareas}
       />
       <BuscadorTareas
@@ -47,20 +53,21 @@ export default function Home() {
       <BtnAgregarTarea />
       <ContenedorCards>
         {(tareasFilter.length > 0) ?
-          tareasFilter.map(tarea =>(
-            <CardTarea 
-              key={tarea.id} 
-              tarea={tarea} 
-              handleCambiarCompletado={handleCambiarCompletado} 
+          tareasFilter.map(tarea => (
+            <CardTarea
+              key={tarea.id}
+              tarea={tarea}
+              handleCambiarCompletado={handleCambiarCompletado}
+              handleEliminarTarea={handleEliminarTarea}
             />
           ))
           :
-          <h1 
+          <h1
             className="m-10 font-bold text-3xl text-red-500"
           >
             ¡No tienes tareas en el momento! ¡Agrega una!
           </h1>
-        }     
+        }
       </ContenedorCards>
     </div>
   );

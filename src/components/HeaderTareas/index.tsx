@@ -35,7 +35,7 @@ export const HeaderTareas = ({ tareas }: Props): JSX.Element => {
                     Has realizado {count} de las {tareas.length} tareas
                 </h1>
             }
-            {tareas.length === count &&
+            {(tareas.length > 0 && tareas.length === count) &&
                 <h1 className="text-blue-800 font-bold text-2xl">
                     ¡Felicidades! ¡Terminaste todas las tareas!
                 </h1>
