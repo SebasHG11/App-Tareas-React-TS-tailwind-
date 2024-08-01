@@ -5,6 +5,8 @@ import { BuscadorTareas } from "@/components/BuscadorTareas";
 import { BtnAgregarTarea } from "@/components/BtnAgregarTarea";
 import { ContenedorCards } from "@/components/ContenedorCards";
 import { CardTarea } from "@/components/CardTarea";
+import { Modal } from "@/components/Modal";
+import { FormAgregarTarea } from "@/components/FormAgregarTarea";
 
 export default function Home() {
   const initialValue: ITarea[] = [
@@ -16,6 +18,7 @@ export default function Home() {
   const [tareas, setTareas] = useState<ITarea[]>(initialValue);
   const [tareasFilter, setTareasFilter] = useState<ITarea[]>(tareas);
   const [busqueda, setBusqueda] = useState<string>('');
+  const [openModal, setOpenModal] = useState<boolean>(false);
 
   const handleCambiarCompletado = (id: number, event: MouseEvent<HTMLSpanElement, globalThis.MouseEvent>): void => {
     event.preventDefault();
@@ -43,6 +46,10 @@ export default function Home() {
 
   return (
     <div className="grid place-items-center">
+      {openModal &&
+       <Modal>
+        <FormAgregarTarea />
+       </Modal> }
       <HeaderTareas
         tareas={tareas}
       />
@@ -50,7 +57,9 @@ export default function Home() {
         busqueda={busqueda}
         setBusqueda={setBusqueda}
       />
-      <BtnAgregarTarea />
+      <BtnAgregarTarea
+        setOpenModal={setOpenModal} 
+      />
       <ContenedorCards>
         {(tareasFilter.length > 0) ?
           tareasFilter.map(tarea => (
