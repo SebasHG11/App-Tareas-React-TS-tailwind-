@@ -24,6 +24,7 @@ export const CardTarea = ({ tarea, handleCambiarCompletado }: Props): JSX.Elemen
                   className="text-3xl cursor-pointer hover:text-4xl">❌</span>
               }
               <span className="text-3xl cursor-pointer hover:text-4xl">✏️</span>
+              <span className="text-3xl cursor-pointer hover:text-4xl">🗑️</span>
             </div>
         </div>
     );

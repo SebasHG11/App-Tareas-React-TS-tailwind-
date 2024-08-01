@@ -14,7 +14,7 @@ export default function Home() {
   ];
 
   const [tareas, setTareas] = useState<ITarea[]>(initialValue);
-  const [tareasFilter, setTareasFilter] = useState<ITarea[]>(tareas)
+  const [tareasFilter, setTareasFilter] = useState<ITarea[]>(tareas);
   const [busqueda, setBusqueda] = useState<string>('');
 
   const handleCambiarCompletado = (id: number, event: MouseEvent<HTMLSpanElement, globalThis.MouseEvent>): void =>{
@@ -37,7 +37,9 @@ export default function Home() {
 
   return (
     <div className="grid place-items-center">
-      <HeaderTareas />
+      <HeaderTareas 
+        tareas={tareas}
+      />
       <BuscadorTareas
         busqueda={busqueda}
         setBusqueda={setBusqueda}
@@ -53,9 +55,12 @@ export default function Home() {
             />
           ))
           :
-          <h1>¡No tienes Tareas en el momento! ¡Agrega una!</h1>
-        }
-        
+          <h1 
+            className="m-10 font-bold text-3xl text-red-500"
+          >
+            ¡No tienes tareas en el momento! ¡Agrega una!
+          </h1>
+        }     
       </ContenedorCards>
     </div>
   );
