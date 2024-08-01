@@ -24,19 +24,19 @@ export const HeaderTareas = ({ tareas }: Props): JSX.Element => {
     }, [tareas]);
 
     return (
-        <div className="m-3">
+        <div className="m-4">
             {tareas.length <= 0 &&
-                <h1 className="text-blue-800 font-bold text-2xl">
+                <h1 className="text-blue-800 font-bold text-2xl text-center">
                     No hay tareas
                 </h1>
             }
             {(tareas.length > 0 && tareas.length !== count) &&
-                <h1 className="text-blue-800 font-bold text-2xl">
+                <h1 className="text-blue-800 font-bold text-2xl text-center">
                     Has realizado {count} de las {tareas.length} tareas
                 </h1>
             }
             {(tareas.length > 0 && tareas.length === count) &&
-                <h1 className="text-blue-800 font-bold text-2xl">
+                <h1 className="text-blue-800 font-bold text-2xl text-center">
                     ¡Felicidades! ¡Terminaste todas las tareas!
                 </h1>
             }

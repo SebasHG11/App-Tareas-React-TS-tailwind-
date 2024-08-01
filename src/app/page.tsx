@@ -10,9 +10,9 @@ import { FormAgregarTarea } from "@/components/FormAgregarTarea";
 
 export default function Home() {
   const initialValue: ITarea[] = [
-    { id: 1, titulo: 'Usar TS', completada: true },
-    { id: 2, titulo: 'Usar JS', completada: false },
-    { id: 3, titulo: 'Usar React', completada: true }
+    { id: 0, titulo: 'Usar TS', completada: true },
+    { id: 1, titulo: 'Usar JS', completada: false },
+    { id: 2, titulo: 'Usar React', completada: true }
   ];
 
   const [tareas, setTareas] = useState<ITarea[]>(initialValue);
@@ -40,6 +40,10 @@ export default function Home() {
     setTareas(newTareas);
   }
 
+  const handleAgregarTarea = (newTarea: ITarea): void =>{
+    setTareas([...tareas, newTarea])
+  }
+
   useEffect(() => {
     handleBuscarTarea();
   }, [busqueda, tareas]);
@@ -48,7 +52,11 @@ export default function Home() {
     <div className="grid place-items-center">
       {openModal &&
        <Modal>
-        <FormAgregarTarea />
+        <FormAgregarTarea 
+          tareas={tareas}
+          setOpenModal={setOpenModal}
+          handleAgregarTarea={handleAgregarTarea}
+        />
        </Modal> }
       <HeaderTareas
         tareas={tareas}
@@ -72,7 +80,7 @@ export default function Home() {
           ))
           :
           <h1
-            className="m-10 font-bold text-3xl text-red-500"
+            className="m-10 font-bold text-3xl text-red-500 text-center"
           >
             ¡No tienes tareas en el momento! ¡Agrega una!
           </h1>

@@ -10,7 +10,9 @@ export const Modal = ({ children }: Props): JSX.Element => {
 
     if (portal) {
         return createPortal(
-            children,
+            <div className="grid place-items-center bg-opacity-50 bg-slate-800 fixed top-0 bottom-0 left-0 right-0 z-50 text-white w-full">
+                {children}
+            </div>,
             portal
         )
     } else {

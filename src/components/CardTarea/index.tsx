@@ -9,7 +9,7 @@ type Props = {
 export const CardTarea = ({ tarea, handleCambiarCompletado, handleEliminarTarea }: Props): JSX.Element => {
   return (
     <div
-      className="m-2 w-2/5 bg-yellow-200 px-5 py-10 rounded-xl flex items-center justify-between shadow-2xl"
+      className="m-2 w-4/5 bg-yellow-200 px-5 py-10 rounded-xl flex items-center justify-between shadow-2xl"
     >
       <div>
         <h2 className="font-normal">{tarea.titulo}</h2>
