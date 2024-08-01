@@ -7,18 +7,15 @@ import { ContenedorCards } from "@/components/ContenedorCards";
 import { CardTarea } from "@/components/CardTarea";
 import { Modal } from "@/components/Modal";
 import { FormAgregarTarea } from "@/components/FormAgregarTarea";
+import { FormEditarTarea } from "@/components/FormEditarTarea";
 
 export default function Home() {
-  const initialValue: ITarea[] = [
-    { id: 0, titulo: 'Usar TS', completada: true },
-    { id: 1, titulo: 'Usar JS', completada: false },
-    { id: 2, titulo: 'Usar React', completada: true }
-  ];
-
-  const [tareas, setTareas] = useState<ITarea[]>(initialValue);
+  const [tareas, setTareas] = useState<ITarea[]>([]);
   const [tareasFilter, setTareasFilter] = useState<ITarea[]>(tareas);
   const [busqueda, setBusqueda] = useState<string>('');
   const [openModal, setOpenModal] = useState<boolean>(false);
+  const [openModalEdit, setOpenModalEdit] = useState<boolean>(false);
+  const [tareaEditar, setTareaEditar] = useState<ITarea>();
 
   const handleCambiarCompletado = (id: number, event: MouseEvent<HTMLSpanElement, globalThis.MouseEvent>): void => {
     event.preventDefault();
@@ -40,24 +37,51 @@ export default function Home() {
     setTareas(newTareas);
   }
 
-  const handleAgregarTarea = (newTarea: ITarea): void =>{
-    setTareas([...tareas, newTarea])
+  const handleAgregarTarea = (newTarea: ITarea): void => {
+    setTareas([...tareas, newTarea]);
+  }
+
+  const handleEditarTarea = (editTarea: ITarea): void => {
+    if (editTarea) {
+      const newTareas = tareas.map(tarea => {
+        if (tarea.id === editTarea.id) {
+          return { ...editTarea, titulo: editTarea.titulo };
+        }
+        return tarea;
+      });
+      setTareas(newTareas);
+    }
+    return;
   }
 
   useEffect(() => {
     handleBuscarTarea();
   }, [busqueda, tareas]);
 
+  useEffect(() => {
+    console.log(tareaEditar);
+  }, [tareaEditar])
+
   return (
     <div className="grid place-items-center">
       {openModal &&
-       <Modal>
-        <FormAgregarTarea 
-          tareas={tareas}
-          setOpenModal={setOpenModal}
-          handleAgregarTarea={handleAgregarTarea}
-        />
-       </Modal> }
+        <Modal>
+          <FormAgregarTarea
+            tareas={tareas}
+            setOpenModal={setOpenModal}
+            handleAgregarTarea={handleAgregarTarea}
+          />
+        </Modal>
+      }
+      {openModalEdit &&
+        <Modal>
+          <FormEditarTarea
+            setOpenModalEdit={setOpenModalEdit}
+            tareaEditar={tareaEditar}
+            handleEditarTarea={handleEditarTarea}
+          />
+        </Modal>
+      }
       <HeaderTareas
         tareas={tareas}
       />
@@ -66,7 +90,7 @@ export default function Home() {
         setBusqueda={setBusqueda}
       />
       <BtnAgregarTarea
-        setOpenModal={setOpenModal} 
+        setOpenModal={setOpenModal}
       />
       <ContenedorCards>
         {(tareasFilter.length > 0) ?
@@ -76,6 +100,8 @@ export default function Home() {
               tarea={tarea}
               handleCambiarCompletado={handleCambiarCompletado}
               handleEliminarTarea={handleEliminarTarea}
+              setOpenModalEdit={setOpenModalEdit}
+              setTareaEditar={setTareaEditar}
             />
           ))
           :
