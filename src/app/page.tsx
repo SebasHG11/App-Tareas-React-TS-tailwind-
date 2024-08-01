@@ -17,9 +17,10 @@ export default function Home() {
   const [openModal, setOpenModal] = useState<boolean>(false);
   const [openModalEdit, setOpenModalEdit] = useState<boolean>(false);
   const [tareaEditar, setTareaEditar] = useState<ITarea>();
+  const [isLoading, setIsLoading] = useState<boolean>(true);
 
   useEffect(() => {
-    const items: string | null = window.localStorage.getItem("Items")
+    const items: string | null = window.localStorage.getItem("Items");
 
     if (items) {
       let parsedItems: ITarea[] = JSON.parse(items);
@@ -27,6 +28,7 @@ export default function Home() {
     } else {
       setTareas([]);
     }
+    setIsLoading(false);
   }, [])
 
   const useLocalStorage = (newTareas: ITarea[]): void => {
@@ -110,7 +112,15 @@ export default function Home() {
         setOpenModal={setOpenModal}
       />
       <ContenedorCards>
-        {(tareasFilter.length > 0) &&
+        {isLoading &&
+          <div className="loading-wave">
+            <div className="loading-bar"></div>
+            <div className="loading-bar"></div>
+            <div className="loading-bar"></div>
+            <div className="loading-bar"></div>
+          </div>
+        }
+        {(tareasFilter.length > 0 && isLoading === false) &&
           tareasFilter.map(tarea => (
             <CardTarea
               key={tarea.id}
@@ -122,7 +132,7 @@ export default function Home() {
             />
           ))
         }
-        {(tareas.length <= 0) &&
+        {(tareas.length <= 0 && isLoading === false) &&
           <h1
             className="m-10 font-bold text-3xl text-red-500 text-center"
           >
